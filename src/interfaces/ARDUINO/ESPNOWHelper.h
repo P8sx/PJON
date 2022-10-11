@@ -13,8 +13,8 @@
 #include "freertos/semphr.h"
 #include "freertos/timers.h"
 #include "nvs_flash.h"
-#include "esp_event_loop.h"
-#include "tcpip_adapter.h"
+#include "esp_event.h"
+#include "esp_netif.h"
 #include "esp_wifi.h"
 #include "esp_log.h"
 #include "esp_system.h"
@@ -29,10 +29,10 @@ static const char *TAG = "espnow";
    It is configured in menuconfig. */
 #if CONFIG_STATION_MODE
   #define ESPNOW_WIFI_MODE WIFI_MODE_STA
-  #define ESPNOW_WIFI_IF ESP_IF_WIFI_STA
+  #define ESPNOW_WIFI_IF WIFI_IF_STA
 #else
   #define ESPNOW_WIFI_MODE WIFI_MODE_AP
-  #define ESPNOW_WIFI_IF ESP_IF_WIFI_AP
+  #define ESPNOW_WIFI_IF WIFI_IF_AP
 #endif
 
 #define ESPNOW_MAX_PACKET 250
@@ -149,7 +149,7 @@ public:
       ESP_LOGE(TAG, "Create mutex fail");
       return ESP_FAIL;
     }
-    tcpip_adapter_init();
+    esp_netif_init();
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
     ESP_ERROR_CHECK(esp_wifi_set_country(&wifi_country));
